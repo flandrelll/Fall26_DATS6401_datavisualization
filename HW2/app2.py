@@ -5,7 +5,7 @@ import altair as alt
 
 st.title("Data Visualization of Baseball Statistics")
 
-df = pd.read_csv("BaseballHeightWeight.csv")
+df = pd.read_csv("HW2/BaseballHeightWeight.csv")
 
 #%%
 # brief introduction to the dataset
