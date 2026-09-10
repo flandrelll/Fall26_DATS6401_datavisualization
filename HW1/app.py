@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 st.title("Data Visualization of Baseball Statistics")
 
-df = pd.read_csv("BaseballHeightWeight.csv")
+df = pd.read_csv("HW1/BaseballHeightWeight.csv")
 
 #%%
 # brief introduction to the dataset

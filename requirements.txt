@@ -1,0 +1,40 @@
+# Python dependencies for rendering the DATS 6401 book locally.
+#
+# Only the Foundations chapters (Weeks 1-4) execute at render time, and they
+# rely only on the lighter libraries below (the executable cells use datasets
+# that ship with plotly, scikit-learn, and statsmodels — no network needed).
+#
+# The heavier libraries are listed because they appear in the (static,
+# non-executed) code of later chapters and in students' own work. You only
+# need them installed locally if you later convert those chapters' cells to
+# executable. Pin versions for reproducibility once your environment is settled.
+
+# --- Needed to render the executable Weeks 1-4 ---
+jupyter
+pandas
+numpy
+matplotlib
+seaborn
+altair
+plotly
+scikit-learn
+statsmodels
+
+# --- Used in later chapters' static code / student work (optional locally) ---
+streamlit
+fastapi
+uvicorn
+flask
+requests
+networkx
+pyvis
+geopandas
+mapclassify
+contextily
+folium
+umap-learn
+bertopic
+wordcloud
+joblib
+pydantic
+streamlit-folium
