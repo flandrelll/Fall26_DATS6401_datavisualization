@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.title("Data Visualization of Baseball Statistics")
+st.title("HW1 - Data Visualization of Baseball Statistics")
 
 df = pd.read_csv("HW1/BaseballHeightWeight.csv")
 
