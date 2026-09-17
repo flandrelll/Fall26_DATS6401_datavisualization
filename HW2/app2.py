@@ -3,9 +3,9 @@ import streamlit as st
 import pandas as pd
 import altair as alt
 
-st.title("Data Visualization of Baseball Statistics")
+st.title("HW2 - Data Visualization of Baseball Statistics")
 
-df = pd.read_csv("BaseballHeightWeight.csv")
+df = pd.read_csv("HW2/BaseballHeightWeight.csv")
 
 #%%
 # brief introduction to the dataset
