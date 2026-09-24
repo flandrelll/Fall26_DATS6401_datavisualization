@@ -10,7 +10,7 @@ st.title("Air Passengers Time Series Visualization")
 #%%
 @st.cache_data
 def load_data():
-    df = pd.read_csv("AirPassengers.csv")
+    df = pd.read_csv("HW4/AirPassengers.csv")
     df["Month"] = pd.to_datetime(df["Month"])
     return df
 
