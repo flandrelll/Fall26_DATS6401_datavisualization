@@ -12,7 +12,7 @@ st.title("Steam Game Review Explorer")
 #%%
 @st.cache_data
 def load_data():
-    df = pd.read_csv("gamereview.csv")
+    df = pd.read_csv("HW7/gamereview.csv")
 
     df = df.dropna(subset=["review"]).copy()
     df["review"] = df["review"].str.strip()
