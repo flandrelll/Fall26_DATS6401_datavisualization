@@ -37,6 +37,6 @@ bertopic
 wordcloud
 joblib
 pydantic
-rgb2gray
+scikit-image
 streamlit-folium
 duckDB
