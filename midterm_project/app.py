@@ -31,7 +31,7 @@ Release date: December 21, 2020.
 @st.cache_data
 def load_data():
     daily = pd.read_csv(
-        "stardew_data/daily_activity.csv",
+        "midterm_project/stardew_data/daily_activity.csv",
         parse_dates=["date"]
     )
 
