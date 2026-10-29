@@ -37,4 +37,6 @@ bertopic
 wordcloud
 joblib
 pydantic
+scikit-image
 streamlit-folium
+duckDB
