@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.express as px
 import networkx as nx
 import streamlit.components.v1 as components
-
+from pathlib import Path
 from pyvis.network import Network
 from sklearn.feature_extraction.text import CountVectorizer, ENGLISH_STOP_WORDS
 
@@ -28,25 +28,29 @@ Release date: December 21, 2020.
 
 
 #%% Load Data
+# Absolute path to the data folder
+DATA_DIR = Path(__file__).resolve().parent / "stardew_data"
+
+#%% Load Data
 @st.cache_data
 def load_data():
     daily = pd.read_csv(
-        "stardew_data/daily_activity.csv",
+        DATA_DIR / "daily_activity.csv",
         parse_dates=["date"]
     )
 
     text_comments = pd.read_csv(
-        "stardew_data/text_comments.csv",
+        DATA_DIR / "text_comments.csv",
         parse_dates=["created_at"]
     )
 
     text_posts = pd.read_csv(
-        "stardew_data/text_posts.csv",
+        DATA_DIR / "text_posts.csv",
         parse_dates=["created_at"]
     )
 
     network_replies = pd.read_csv(
-        "stardew_data/network_replies.csv",
+        DATA_DIR / "network_replies.csv",
         parse_dates=["created_at"]
     )
 
