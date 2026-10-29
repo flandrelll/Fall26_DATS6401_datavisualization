@@ -281,6 +281,32 @@ def plot_intensity_histogram(image):
 
 
 #%%
+# Each artwork contributes equally to a style's intensity histogram.
+# This avoids weighting large artwork files more heavily than small ones.
+@st.cache_data(show_spinner=False)
+def get_style_intensity_histograms():
+    bins = np.linspace(0, 256, 33)
+    records = []
+
+    for _, row in df.iterrows():
+        img = load_image(row["image_path"])
+        arr = resize_image(img).astype(float) / 255
+        gray = rgb2gray(arr) * 255
+        hist, _ = np.histogram(gray, bins=bins)
+        proportion = hist / max(hist.sum(), 1)
+
+        for i, value in enumerate(proportion):
+            records.append({
+                "style": row["style"],
+                "artwork_id": int(row["artwork_id"]),
+                "intensity": float((bins[i] + bins[i + 1]) / 2),
+                "proportion": float(value)
+            })
+
+    return pd.DataFrame(records)
+
+
+#%%
 # Structural Analysis
 
 def show_structure(image):
@@ -311,10 +337,27 @@ def show_structure(image):
 
     st.subheader("Sobel Edge Feature Map")
 
-    arr = resize_image(image).astype(float) / 255
-
+    arr = resize_image(image).astype(float) / 255.0
     gray = rgb2gray(arr)
     edges = sobel(gray)
+
+    # A consistent threshold for exploratory comparisons
+    edge_threshold = 0.10
+    mean_edge = float(edges.mean())
+    strong_edge_pct = float((edges >= edge_threshold).mean() * 100)
+
+    # Compare edge responses across four image quadrants
+    h, w = edges.shape
+    edge_regions = {
+        "top left": edges[:h // 2, :w // 2],
+        "top right": edges[:h // 2, w // 2:],
+        "bottom left": edges[h // 2:, :w // 2],
+        "bottom right": edges[h // 2:, w // 2:]
+    }
+    strongest_region = max(
+        edge_regions,
+        key=lambda region: float(edge_regions[region].mean())
+    )
 
     left, right = st.columns(2)
 
@@ -326,17 +369,41 @@ def show_structure(image):
         )
 
     with right:
-        st.image(
+        fig_edge = px.imshow(
             edges,
-            caption="Sobel Edge Map",
-            use_container_width=True,
-            clamp=True
+            color_continuous_scale="gray",
+            zmin=0,
+            zmax=1,
+            labels={"color": "Gradient"}
         )
+        fig_edge.update_layout(
+            height=390,
+            coloraxis_colorbar_title="Gradient",
+            margin=dict(l=0, r=0, t=0, b=0)
+        )
+        fig_edge.update_xaxes(visible=False)
+        fig_edge.update_yaxes(visible=False)
+        st.plotly_chart(fig_edge, use_container_width=True)
 
-    st.caption("""
-    Bright regions in the Sobel map indicate
-    stronger local intensity changes.
-    """)
+    c1, c2 = st.columns(2)
+    c1.metric("Mean Edge Strength", f"{mean_edge:.3f}")
+    c2.metric("Strong Edge Pixels", f"{strong_edge_pct:.1f}%")
+
+    st.caption(
+        "Strong edge pixels use a fixed Sobel gradient threshold "
+        f"of {edge_threshold:.2f} on images resized to a maximum of 400 px."
+    )
+
+    st.markdown("#### Feature Interpretation")
+    st.write(
+        f"The mean gradient magnitude is {mean_edge:.3f}, and "
+        f"{strong_edge_pct:.1f}% of pixels exceed the selected threshold. "
+        f"The {strongest_region} quadrant has the strongest average edge "
+        "response among the four image quadrants. Bright areas may "
+        "indicate object boundaries, fine texture, or lighting changes. "
+        "These numerical results do not identify specific objects, "
+        "and a Sobel edge map is not a visual-attention saliency map."
+    )
 
     with st.expander(
         "Methodology & Interpretation — Image Structure"
@@ -355,9 +422,11 @@ def show_structure(image):
 
         **Sobel Edge Detection**
 
-        The Sobel operator estimates local image
-        intensity gradients to identify edges
-        and structural patterns.
+        The Sobel operator estimates local grayscale
+        intensity gradients. Mean gradient and the
+        proportion above a fixed threshold summarize
+        edge responses, and quadrant comparisons
+        locate coarse areas with stronger responses.
 
         **Purpose**
 
@@ -543,6 +612,16 @@ if (
     or st.session_state.selected_artwork_id not in artwork_ids
 ):
     st.session_state.selected_artwork_id = artwork_ids[0]
+
+# Keep the dropdown in sync with artwork chosen in Overview.
+if "artwork_dropdown" not in st.session_state:
+    st.session_state.artwork_dropdown = st.session_state.selected_artwork_id
+
+
+def on_artwork_dropdown_change():
+    st.session_state.selected_artwork_id = (
+        st.session_state.artwork_dropdown
+    )
 
 
 #%%
@@ -782,10 +861,9 @@ with tab0:
                         key=f"select_{row['artwork_id']}"
                     ):
 
-                        st.session_state.selected_artwork_id = int(
-                            row["artwork_id"]
-                        )
-
+                        chosen_id = int(row["artwork_id"])
+                        st.session_state.selected_artwork_id = chosen_id
+                        st.session_state.artwork_dropdown = chosen_id
                         st.rerun()
 
     with st.expander(
@@ -894,20 +972,17 @@ with tab1:
     and comparisons with other art styles.
     """)
 
-    # Choose Artwork
+    # Choose Artwork; selection is synchronized with Overview
     selected_id = st.selectbox(
         "Choose an Artwork",
         options=artwork_ids,
-        index=artwork_ids.index(
-            st.session_state.selected_artwork_id
-        ),
+        key="artwork_dropdown",
+        on_change=on_artwork_dropdown_change,
         format_func=lambda x: (
             f"Artwork #{x} — "
             f"{df.loc[df['artwork_id'] == x, 'artist'].iloc[0]}"
         )
     )
-
-    st.session_state.selected_artwork_id = selected_id
 
     selected_row = df[
         df["artwork_id"] == selected_id
@@ -1053,6 +1128,100 @@ with tab1:
         subject matter, and digitization
         may influence the results.
         """)
+
+
+    st.divider()
+    st.subheader("Two-Class Intensity Distribution Comparison")
+    st.info("""
+    **How to Use**
+
+    Choose two art styles to compare their average grayscale
+    pixel-intensity distributions. Each artwork contributes
+    equally, regardless of its original image size.
+    """)
+
+    class_left, class_right = st.columns(2)
+    with class_left:
+        style_a = st.selectbox(
+            "First Style",
+            styles,
+            index=styles.index("Baroque") if "Baroque" in styles else 0,
+            key="intensity_style_a"
+        )
+    with class_right:
+        second_default = (
+            styles.index("Impressionism")
+            if "Impressionism" in styles else min(1, len(styles) - 1)
+        )
+        style_b = st.selectbox(
+            "Second Style",
+            styles,
+            index=second_default,
+            key="intensity_style_b"
+        )
+
+    if style_a == style_b:
+        st.warning("Choose two different styles to compare.")
+    else:
+        intensity_df = get_style_intensity_histograms()
+        mean_df = (
+            intensity_df[
+                intensity_df["style"].isin([style_a, style_b])
+            ]
+            .groupby(["style", "intensity"], as_index=False)
+            ["proportion"].mean()
+        )
+
+        fig_intensity = px.line(
+            mean_df,
+            x="intensity",
+            y="proportion",
+            color="style",
+            markers=True,
+            title="Average Grayscale Intensity Distribution"
+        )
+        fig_intensity.update_layout(
+            xaxis_title="Grayscale Intensity (0–255)",
+            yaxis_title="Mean Proportion of Pixels per Bin",
+            legend_title_text="Art Style"
+        )
+        st.plotly_chart(fig_intensity, use_container_width=True)
+
+        counts = df["style"].value_counts()
+        st.caption(
+            f"Sample sizes: {style_a} (n={counts[style_a]}) and "
+            f"{style_b} (n={counts[style_b]}). "
+            "Each curve averages per-image normalized histograms "
+            "using 32 equal-width intensity bins."
+        )
+
+        with st.expander(
+            "Methodology & Interpretation — Intensity Comparison"
+        ):
+            st.markdown("""
+            **Method**
+
+            Each artwork is converted to grayscale and its pixel
+            intensities are divided into 32 bins. The counts in each
+            image are divided by its total pixels, then the resulting
+            distributions are averaged within each style.
+
+            **Purpose**
+
+            To compare how much of the artwork area falls into darker
+            or brighter intensity ranges across two sampled styles.
+
+            **Interpretation**
+
+            Higher curves at low intensities suggest a larger share
+            of darker pixels in the sampled artworks. Higher curves
+            toward 255 suggest relatively brighter images.
+
+            **Limitations**
+
+            The sample is small, uneven, and not random. These curves
+            reflect this subset, not all paintings from the movements.
+            """)
 
 
 #%%
