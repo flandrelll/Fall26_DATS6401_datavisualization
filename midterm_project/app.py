@@ -149,7 +149,7 @@ with tab1:
     st.header("Project Overview")
 
     st.write("""
-    This project explores how the r/StardewValley community
+    This project explores how the r/StardewValley reddit community
     discussed and interacted around the release of
     Stardew Valley 1.5, which introduced Ginger Island
     on December 21, 2020.
