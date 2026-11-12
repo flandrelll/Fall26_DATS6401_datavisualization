@@ -26,6 +26,129 @@ PALETTE = ["#e4f1f8", "#b9d9e8", "#77b6d5", "#378cbb", "#145687"]
 NO_DATA_COLOR = "#b7b9bd"
 
 
+# Geographic reference points only (not Supercharger locations).
+# Curated major-city coordinates in WGS84; labels do not encode a data variable.
+# National view is intentionally limited to avoid crowding.
+CITY_REFERENCE = [
+    ("Seattle", "Washington", 47.6062, -122.3321),
+    ("Spokane", "Washington", 47.6588, -117.4260),
+    ("Tacoma", "Washington", 47.2529, -122.4443),
+    ("Portland", "Oregon", 45.5152, -122.6784),
+    ("Eugene", "Oregon", 44.0521, -123.0868),
+    ("San Francisco", "California", 37.7749, -122.4194),
+    ("Los Angeles", "California", 34.0522, -118.2437),
+    ("San Diego", "California", 32.7157, -117.1611),
+    ("Sacramento", "California", 38.5816, -121.4944),
+    ("San Jose", "California", 37.3382, -121.8863),
+    ("Fresno", "California", 36.7378, -119.7871),
+    ("Las Vegas", "Nevada", 36.1699, -115.1398),
+    ("Reno", "Nevada", 39.5296, -119.8138),
+    ("Phoenix", "Arizona", 33.4484, -112.0740),
+    ("Tucson", "Arizona", 32.2226, -110.9747),
+    ("Salt Lake City", "Utah", 40.7608, -111.8910),
+    ("Provo", "Utah", 40.2338, -111.6585),
+    ("Boise", "Idaho", 43.6150, -116.2023),
+    ("Denver", "Colorado", 39.7392, -104.9903),
+    ("Colorado Springs", "Colorado", 38.8339, -104.8214),
+    ("Albuquerque", "New Mexico", 35.0844, -106.6504),
+    ("Santa Fe", "New Mexico", 35.6870, -105.9378),
+    ("Dallas", "Texas", 32.7767, -96.7970),
+    ("Houston", "Texas", 29.7604, -95.3698),
+    ("Austin", "Texas", 30.2672, -97.7431),
+    ("San Antonio", "Texas", 29.4241, -98.4936),
+    ("Fort Worth", "Texas", 32.7555, -97.3308),
+    ("El Paso", "Texas", 31.7619, -106.4850),
+    ("Oklahoma City", "Oklahoma", 35.4676, -97.5164),
+    ("Tulsa", "Oklahoma", 36.1540, -95.9928),
+    ("Wichita", "Kansas", 37.6872, -97.3301),
+    ("Kansas City", "Missouri", 39.0997, -94.5786),
+    ("St. Louis", "Missouri", 38.6270, -90.1994),
+    ("Omaha", "Nebraska", 41.2565, -95.9345),
+    ("Lincoln", "Nebraska", 40.8136, -96.7026),
+    ("Des Moines", "Iowa", 41.5868, -93.6250),
+    ("Minneapolis", "Minnesota", 44.9778, -93.2650),
+    ("St. Paul", "Minnesota", 44.9537, -93.0900),
+    ("Fargo", "North Dakota", 46.8772, -96.7898),
+    ("Sioux Falls", "South Dakota", 43.5460, -96.7313),
+    ("Billings", "Montana", 45.7833, -108.5007),
+    ("Cheyenne", "Wyoming", 41.1400, -104.8202),
+    ("Chicago", "Illinois", 41.8781, -87.6298),
+    ("Springfield", "Illinois", 39.7817, -89.6501),
+    ("Milwaukee", "Wisconsin", 43.0389, -87.9065),
+    ("Madison", "Wisconsin", 43.0731, -89.4012),
+    ("Detroit", "Michigan", 42.3314, -83.0458),
+    ("Grand Rapids", "Michigan", 42.9634, -85.6681),
+    ("Indianapolis", "Indiana", 39.7684, -86.1581),
+    ("Columbus", "Ohio", 39.9612, -82.9988),
+    ("Cleveland", "Ohio", 41.4993, -81.6944),
+    ("Cincinnati", "Ohio", 39.1031, -84.5120),
+    ("Louisville", "Kentucky", 38.2527, -85.7585),
+    ("Lexington", "Kentucky", 38.0406, -84.5037),
+    ("Nashville", "Tennessee", 36.1627, -86.7816),
+    ("Memphis", "Tennessee", 35.1495, -90.0490),
+    ("Knoxville", "Tennessee", 35.9606, -83.9207),
+    ("Birmingham", "Alabama", 33.5186, -86.8104),
+    ("Montgomery", "Alabama", 32.3792, -86.3077),
+    ("Jackson", "Mississippi", 32.2988, -90.1848),
+    ("Little Rock", "Arkansas", 34.7465, -92.2896),
+    ("New Orleans", "Louisiana", 29.9511, -90.0715),
+    ("Baton Rouge", "Louisiana", 30.4515, -91.1871),
+    ("Atlanta", "Georgia", 33.7490, -84.3880),
+    ("Savannah", "Georgia", 32.0809, -81.0912),
+    ("Miami", "Florida", 25.7617, -80.1918),
+    ("Orlando", "Florida", 28.5383, -81.3792),
+    ("Tampa", "Florida", 27.9506, -82.4572),
+    ("Jacksonville", "Florida", 30.3322, -81.6557),
+    ("Tallahassee", "Florida", 30.4383, -84.2807),
+    ("Charlotte", "North Carolina", 35.2271, -80.8431),
+    ("Raleigh", "North Carolina", 35.7796, -78.6382),
+    ("Greensboro", "North Carolina", 36.0726, -79.7920),
+    ("Charleston", "South Carolina", 32.7765, -79.9311),
+    ("Columbia", "South Carolina", 34.0007, -81.0348),
+    ("Richmond", "Virginia", 37.5407, -77.4360),
+    ("Virginia Beach", "Virginia", 36.8529, -75.9780),
+    ("Washington, DC", "District of Columbia", 38.9072, -77.0369),
+    ("Baltimore", "Maryland", 39.2904, -76.6122),
+    ("Philadelphia", "Pennsylvania", 39.9526, -75.1652),
+    ("Pittsburgh", "Pennsylvania", 40.4406, -79.9959),
+    ("New York City", "New York", 40.7128, -74.0060),
+    ("Buffalo", "New York", 42.8864, -78.8784),
+    ("Albany", "New York", 42.6526, -73.7562),
+    ("Newark", "New Jersey", 40.7357, -74.1724),
+    ("Trenton", "New Jersey", 40.2206, -74.7597),
+    ("Wilmington", "Delaware", 39.7447, -75.5484),
+    ("Boston", "Massachusetts", 42.3601, -71.0589),
+    ("Worcester", "Massachusetts", 42.2626, -71.8023),
+    ("Providence", "Rhode Island", 41.8240, -71.4128),
+    ("Hartford", "Connecticut", 41.7658, -72.6734),
+    ("New Haven", "Connecticut", 41.3083, -72.9279),
+    ("Portland, ME", "Maine", 43.6591, -70.2568),
+    ("Augusta", "Maine", 44.3106, -69.7795),
+    ("Manchester", "New Hampshire", 42.9956, -71.4548),
+    ("Concord", "New Hampshire", 43.2081, -71.5376),
+    ("Burlington", "Vermont", 44.4759, -73.2121),
+    ("Montpelier", "Vermont", 44.2601, -72.5754),
+    ("Charleston, WV", "West Virginia", 38.3498, -81.6326),
+    ("Anchorage", "Alaska", 61.2181, -149.9003),
+    ("Fairbanks", "Alaska", 64.8378, -147.7164),
+    ("Juneau", "Alaska", 58.3019, -134.4197),
+    ("Honolulu", "Hawaii", 21.3099, -157.8581),
+    ("Hilo", "Hawaii", 19.7297, -155.0900),
+]
+CITY_DF = pd.DataFrame(CITY_REFERENCE, columns=["city", "state", "lat", "lon"])
+NATIONAL_CITY_LABELS = [
+    "Seattle", "San Francisco", "Los Angeles", "Phoenix", "Denver",
+    "Dallas", "Houston", "Minneapolis", "Chicago", "Detroit",
+    "Atlanta", "Miami", "Washington, DC", "New York City", "Boston",
+]
+
+
+def cities_for_map(selected_state):
+    if selected_state == "All states":
+        return CITY_DF[CITY_DF["city"].isin(NATIONAL_CITY_LABELS)]
+    return CITY_DF[CITY_DF["state"] == selected_state].head(10)
+
+
 @st.cache_data(show_spinner="Loading prepared geographic data…")
 def load_data():
     required = ["states_final.geojson", "chargers_processed.geojson"]
@@ -87,7 +210,7 @@ def stepped_scale(colors):
     return result
 
 
-def map_view(states, points, metric, display_points=True, selected_state="All states"):
+def map_view(states, points, metric, display_points=True, selected_state="All states", show_city_labels=True):
     current = states.copy()
     class_ids, bounds = make_quantile_classes(current[metric])
     current["class_id"] = class_ids
@@ -155,6 +278,21 @@ def map_view(states, points, metric, display_points=True, selected_state="All st
             name="Supercharger locations",
         ))
 
+    # Geographic reference: major cities in a separate, non-thematic label layer.
+    # Add last so labels remain visible above station markers.
+    if show_city_labels:
+        cities = cities_for_map(selected_state)
+        if not cities.empty:
+            fig.add_trace(go.Scattergeo(
+                lon=cities["lon"], lat=cities["lat"],
+                text=cities["city"], mode="markers+text",
+                marker=dict(size=3.5, color="#202a35", opacity=0.95),
+                textposition="top center",
+                textfont=dict(size=10, color="#202a35", family="Arial"),
+                hoverinfo="skip", showlegend=False,
+                name="City reference labels",
+            ))
+
     geo = dict(scope="usa", projection_type="albers usa", visible=False,
                showland=False, showlakes=False, showcountries=False)
     if selected_state != "All states":
@@ -216,6 +354,7 @@ selected_power = st.sidebar.multiselect(
     default=power_values, help="A shared filter: both map and regional analysis update."
 )
 show_points = st.sidebar.checkbox("Show Supercharger point layer", value=True)
+show_city_labels = st.sidebar.checkbox("Show major city labels", value=True)
 
 # When all power bands are selected, retain stations with an unknown kW value.
 # Selecting a subset explicitly excludes unknown-power stations.
@@ -254,7 +393,7 @@ tab_map, tab_analysis = st.tabs(["Geographic map", "Regional analysis & validati
 
 with tab_map:
     st.subheader("Layered thematic map")
-    fig, bounds = map_view(map_states, points, metric, show_points, selected_state)
+    fig, bounds = map_view(map_states, points, metric, show_points, selected_state, show_city_labels)
     st.plotly_chart(fig, width="stretch", theme=None,
                     config={"displaylogo": False, "scrollZoom": True})
 
@@ -269,6 +408,8 @@ with tab_map:
             f"**Point layer:** {len(points):,} Supercharger locations with valid "
             "coordinates, sized by sqrt(stalls), orange markers; "
             "no heatmap or clustering applied. "
+            f"**City labels:** {'major-city reference points (not a thematic layer)' if show_city_labels else 'hidden'}; "
+            "15 cities nationally, up to 10 per selected state; no automatic extra labels when zooming. "
             "**Basemap:** none. **Excluded from region counts:** points with no spatial match."
         )
         if bounds:
